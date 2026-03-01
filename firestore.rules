@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isValidRegistration() {
+      let data = request.resource.data;
+      return data.studentInfo != null &&
+             data.parentInfo != null &&
+             data.courseInfo != null &&
+             data.payment != null &&
+             data.status == 'pending';
+    }
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.role == 'admin';
+    }
+
+    function isOwner(userId) {
+      return request.auth != null && (
+        request.auth.uid == userId ||
+        request.resource.data.studentInfo.userId == request.auth.uid ||
+        request.resource.data.parentInfo.userId == request.auth.uid
+      );
+    }
+
+    // Blog posts - public read, admin write
+    match /blog_posts/{postId} {
+      allow read: if true;
+      allow write: if request.auth != null && isAdmin();
+    }
+
+    // Students collection
+    match /students/{userId} {
+      allow read, write: if true;
+    }
+
+    // Courses collection
+    match /courses/{courseId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Registrations with improved validation and permissions
+    match /registrations/{registrationId} {
+      allow read: if true;
+      allow create: if request.auth != null && isValidRegistration();
+      allow update: if request.auth != null && (isAdmin() || isOwner(registrationId));
+      allow delete: if request.auth != null && isAdmin();
+    }
+
+    // Payments collection - allow all operations for now
+    match /payments/{paymentId} {
+      allow read, write: if true;
+    }
+
+    // Payment settings - restricted to admin users only
+    match /settings/payment {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Content collection - public read access for privacy policy
+    match /content/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null && isAdmin();
+    }
+
+    // Default rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

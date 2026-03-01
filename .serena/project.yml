@@ -1,0 +1,31 @@
+name: digisafe-europe
+description: European digital safety platform with course registration and student management
+language: typescript
+framework: vite-react
+
+paths:
+  src: src
+  components: src/components
+  hooks: src/hooks
+  types: src/types
+  firebase: src/firebase
+  services: src/services
+  lib: src/lib
+
+standards:
+  linting: eslint
+  formatting: prettier
+  typeChecking: typescript
+  testing: vitest
+
+firebase:
+  projectId: digisafe-17ed5
+  useEmulator: false
+
+features:
+  - authentication
+  - firestore
+  - cloud-functions
+  - payment-integration
+  - course-management
+  - student-dashboard

@@ -1,0 +1,40 @@
+{
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-sequential-thinking"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "enabled": true,
+      "port": 3001
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["@upstash/context7-mcp"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "enabled": true,
+      "port": 3002
+    }
+  },
+  "projectConfig": {
+    "name": "digisafe-europe",
+    "language": "typescript",
+    "framework": "vite-react",
+    "paths": {
+      "src": "src",
+      "types": "src/types",
+      "components": "src/components",
+      "hooks": "src/hooks",
+      "firebase": "src/firebase",
+      "services": "src/services"
+    },
+    "standards": {
+      "linting": "eslint",
+      "formatting": "prettier",
+      "typeChecking": "typescript"
+    }
+  }
+}
